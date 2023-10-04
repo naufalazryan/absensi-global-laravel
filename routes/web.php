@@ -17,4 +17,9 @@ Route::get('/', function () {
     return ['Absensi Global' => app()->version()];
 });
 
+
+
+
+
+
 require __DIR__.'/auth.php';
