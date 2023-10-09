@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Kegiatan extends Model
 {
     use HasFactory;
-    protected $table = 'tabel_kegiatan';
+    protected $table = 'kegiatan';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'nama',
-        'kelas'
+        'nama_kegiatan',
+        'waktu_kegiatan',
+        'kelas_yang_terlibat',
+        'jumlah_kehadiran'
     ];
 }

@@ -12,6 +12,7 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatan = Kegiatan::all();
+
         return response()->json($kegiatan);
     }
     
@@ -66,5 +67,16 @@ class KegiatanController extends Controller
     {
         Kegiatan::find($id)->delete();
         return response()->json(null, 204);
+    }
+
+    public function getUserRole()
+    {
+        $user = auth()->user();
+
+        if($user){
+            return response()->json(['role' => $user->role]);
+        }
+
+        return response()->json(['role' => 'guest']);
     }
 }
