@@ -20,4 +20,13 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 
+Route::middleware('auth:sanctum')->get('/check-role', function (Request $request) {
+    $user = $request->user();
+
+    $role = $user->role->name;
+
+    return response()->json(['role' => $role]);
+});
+
+
 Route::middleware('auth:sanctum')->get('/kegiatan', [KegiatanController::class, 'index']);
