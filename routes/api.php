@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\CsrfController;
 use App\Http\Controllers\KegiatanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | API Routes
 |--------------------------------------------------------------------------
 |
@@ -19,6 +20,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/csrf-token', [CsrfController::class, 'getToken']);
 
 Route::middleware('auth:sanctum')->get('/check-role', function (Request $request) {
     $user = $request->user();
@@ -28,4 +30,12 @@ Route::middleware('auth:sanctum')->get('/check-role', function (Request $request
     return response()->json(['role' => $role]);
 });
 
-Route::middleware('auth:sanctum')->get('/kegiatan', [KegiatanController::class, 'index']);
+Route::get('/csrf-token', function () {
+    return response()->json(['csrfToken' => csrf_token()]);
+});
+
+
+Route::group(['middleware' => 'web'], function () {
+    Route::get('/kegiatan', [KegiatanController::class, 'index']);
+    Route::post('/kegiatan/add', [KegiatanController::class, 'store']);
+});
