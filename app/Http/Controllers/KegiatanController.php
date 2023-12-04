@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 class KegiatanController extends Controller
@@ -15,84 +14,96 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatan = Kegiatan::all();
+
+        if ($kegiatan->isEmpty()) {
+            return response()->json(['message' => 'Tidak ada kegiatan yang tersedia.'], 404);
+        }
+
         return response()->json($kegiatan);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
+    public function store(Request $request)
     {
+        $request->validate([
+            'nama_kegiatan' => 'required',
+            'waktu_kegiatan' => 'required|date',
+            'kelas_x' => 'required|boolean',
+            'kelas_xi' => 'required|boolean',
+            'kelas_xii' => 'required|boolean',
+            'jumlah_kehadiran' => 'required|integer',
+        ]);
+
+        $kegiatan = new Kegiatan([
+            'nama_kegiatan' => $request->nama_kegiatan,
+            'waktu_kegiatan' => $request->waktu_kegiatan,
+            'kelas_x' => $request->kelas_x,
+            'kelas_xi' => $request->kelas_xi,
+            'kelas_xii' => $request->kelas_xii,
+            'jumlah_kehadiran' => $request->jumlah_kehadiran,
+        ]);
+
+        $kegiatan->save();
+
+        return response()->json([
+            'message' => 'Data Kegiatan Berhasil Ditambahkan',
+            'data' => $kegiatan,
+        ], 201);
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-{
-    $request->validate([
-        'nama_kegiatan' => 'required|max:50|unique:kegiatan',
-        'waktu_kegiatan' => 'required|date',
-        'kelas_x' => 'required|boolean',
-        'kelas_xi' => 'required|boolean',
-        'kelas_xii' => 'required|boolean',
-        'jumlah_kehadiran' => 'required|integer',
-    ]);
-
-    Kegiatan::create($request->all());
-
-    // Laravel will automatically regenerate and include the CSRF token in the response.
-    // You don't need to manually update the token in the cookie.
-
-    return response()->json([
-        'message' => 'Data Kegiatan Berhasil Ditambahkan',
-    ], 200);
-}
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    public function edit($id)
     {
         $kegiatan = Kegiatan::find($id);
-        return response()->json($kegiatan);
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Kegiatan $kegiatan)
-    {
-        //
+        if (!$kegiatan) {
+            return response()->json(['message' => 'Data Kegiatan Tidak Ditemukan'], 404);
+        }
+
+        return response()->json($kegiatan);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kegiatan $kegiatan)
-{
-    $kegiatan->update($request->all());
-    return response()->json($kegiatan);
-}
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_kegiatan' => 'required',
+            'waktu_kegiatan' => 'required|date',
+            'kelas_x' => 'required|boolean',
+            'kelas_xi' => 'required|boolean',
+            'kelas_xii' => 'required|boolean',
+            'jumlah_kehadiran' => 'required|integer',
+        ]);
+
+        $kegiatan = Kegiatan::find($id);
+
+        if (!$kegiatan) {
+            return response()->json(['message' => 'Data Kegiatan Tidak Ditemukan'], 404);
+        }
+
+        $kegiatan->update($request->all());
+
+        return response()->json([
+            'message' => 'Data Kegiatan Berhasil Diperbarui',
+            'data' => $kegiatan,
+        ]);
+    }
+
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        Kegiatan::find($id)->delete();
-        return response()->json(null, 204);
-    }
+        $kegiatan = Kegiatan::find($id);
 
-    public function getUserRole()
-    {
-        $user = auth()->user();
-
-        if ($user) {
-            return response()->json(['role' => $user->role]);
+        if (!$kegiatan) {
+            return response()->json(['message' => 'Data Kegiatan tidak ditemukan.'], 404);
         }
 
-        return response()->json(['role' => 'guest']);
+        $kegiatan->delete();
+
+        return response()->json(['message' => 'Data Kegiatan Berhasil Dihapus'], 204);
     }
 }

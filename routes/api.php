@@ -35,7 +35,11 @@ Route::get('/csrf-token', function () {
 });
 
 
+
 Route::group(['middleware' => 'web'], function () {
     Route::get('/kegiatan', [KegiatanController::class, 'index']);
     Route::post('/kegiatan/add', [KegiatanController::class, 'store']);
-});
+    Route::get('/kegiatan/{id}/edit', [KegiatanController::class, 'edit']);
+    Route::post('/kegiatan/{id}/update', [KegiatanController::class, 'update']);
+    Route::delete('/kegiatan/{id}', [KegiatanController::class, 'destroy']);
+}); 
