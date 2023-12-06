@@ -18,9 +18,7 @@ class KehadiranController extends Controller
 {
     $data = Kehadiran::with('kegiatan')->get();
 
-    // Menambahkan URL gambar dan nama_kegiatan ke hasil query
     $data->each(function ($kehadiran) {
-        // Menggunakan asset untuk menghasilkan URL gambar dari penyimpanan Laravel
         $kehadiran->image_url = asset(Storage::url("bukti_kehadiran/{$kehadiran->image_url}"));
         $kehadiran->nama_kegiatan = $kehadiran->kegiatan->nama_kegiatan;
     });
@@ -64,7 +62,6 @@ class KehadiranController extends Controller
 
         $kegiatan->kehadirans()->save($kehadiran);
 
-        // Simpan file bukti kehadiran di storage
         $path = $request->file('bukti')->storeAs('public/bukti_kehadiran', $kehadiran->bukti);
 
         return response()->json(['message' => 'Kehadiran berhasil disimpan', 'url' => $url], 201);
@@ -85,13 +82,10 @@ class KehadiranController extends Controller
             return response()->json(['error' => 'Kehadiran not found.', 'id' => $id], 404);
         }
     
-        // Mendapatkan nama file gambar dari kolom 'bukti'
         $imageName = $kehadiran->bukti;
     
-        // Membuat URL gambar berdasarkan nama file
         $imageUrl = url('storage/bukti_kehadiran/' . $imageName);
     
-        // Menambahkan URL gambar ke respons
         $kehadiran->imageUrl = $imageUrl;
     
         return response()->json($kehadiran);

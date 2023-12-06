@@ -24,7 +24,6 @@ class KelasController extends Controller
 
     public function getKelasById($id)
     {
-        // Lakukan query untuk mendapatkan data kelas dari tabel kelas
         $kelas = Kelas::find($id);
         return response()->json($kelas);
     }
