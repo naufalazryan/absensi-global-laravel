@@ -99,7 +99,7 @@ class KegiatanController extends Controller
         $kegiatan = Kegiatan::find($id);
 
         if (!$kegiatan) {
-            return response()->json(['message' => 'Data Kegiatan tidak ditemukan.'], 404);
+            return response()->json(['error' => 'Data Kegiatan not found.'], 404);
         }
 
         $kegiatan->delete();

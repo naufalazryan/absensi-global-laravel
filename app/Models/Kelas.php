@@ -15,6 +15,11 @@ class Kelas extends Model
         'jurusan',
         'jumlah_siswa'
     ];
+
+    public function users()
+{
+    return $this->hasMany(User::class, 'id_kelas');
+}
     
 }
 

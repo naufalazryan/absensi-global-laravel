@@ -14,6 +14,18 @@ class KelasController extends Controller
     public function index()
     {
         $kelas = Kelas::all();
+
+        if ($kelas->isEmpty()) {
+            return response()->json(['message' => 'Tidak ada kelas yang tersedia.'], 404);
+        }
+
+        return response()->json($kelas);
+    }
+
+    public function getKelasById($id)
+    {
+        // Lakukan query untuk mendapatkan data kelas dari tabel kelas
+        $kelas = Kelas::find($id);
         return response()->json($kelas);
     }
 

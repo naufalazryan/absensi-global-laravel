@@ -17,9 +17,10 @@ class Kegiatan extends Model
 
     public $timestamps = false;
 
-
-    public function kehadiran()
-    {
-        return $this->hasMany(Kehadiran::class, 'id_kegiatan', 'id');
+    public function kehadirans(){
+        return $this->hasMany(Kehadiran::class, 'id_kegiatan');
     }
+
+
+   
 }

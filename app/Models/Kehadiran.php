@@ -16,8 +16,20 @@ class Kehadiran extends Model
         'bukti'
     ];
 
+    public function storeBukti($bukti){
+        $path = $bukti->store('bukti_kehadiran', 'public');
+        $this->update(['bukti' => $path]);
+
+        return $this;
+    }
+
     public function kegiatan()
     {
-        return $this->belongsTo(Kegiatan::class, 'id_kegiatan', 'id');
+        return $this->belongsTo(Kegiatan::class, 'id_kegiatan');
     }
+
+    public $timestamps = false;
+
+
+   
 }
