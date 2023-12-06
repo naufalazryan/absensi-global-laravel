@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Kehadiran extends Model
 {
@@ -26,6 +27,12 @@ class Kehadiran extends Model
     public function kegiatan()
     {
         return $this->belongsTo(Kegiatan::class, 'id_kegiatan');
+    }
+
+
+    public function getImageUrlAttribute()
+    {
+        return Storage::url('public/bukti_kehadiran/' . $this->attributes['bukti']);
     }
 
     public $timestamps = false;
